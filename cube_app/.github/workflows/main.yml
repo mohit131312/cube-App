@@ -11,28 +11,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.27.0" # or your desired Flutter version
+          flutter-version: "3.22.1"
+
+      - name: Change to project directory
+        run: cd flutter_app
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          cd flutter_app
+          flutter pub get
 
-      - name: Analyze project
-        run: flutter analyze
+      - name: Analyze code
+        run: |
+          cd flutter_app
+          flutter analyze
 
       - name: Run tests
-        run: flutter test
+        run: |
+          cd flutter_app
+          flutter test
 
-      - name: Build Android APK
-        run: flutter build apk --release
+      - name: Build APK
+        run: |
+          cd flutter_app
+          flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
