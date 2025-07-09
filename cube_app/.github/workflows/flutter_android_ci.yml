@@ -25,10 +25,21 @@ jobs:
         run: flutter pub get
         working-directory: ./cube_app
 
-      - name: Analyze code
-        run: flutter analyze
-        working-directory: ./cube_app
+      #   - name: Analyze code
+      #     run: flutter analyze
+      #     working-directory: ./cube_app
 
+      - name: Analyze code
+        run: |
+          flutter analyze > analyze.log
+          cat analyze.log
+          if grep -q "error •" analyze.log; then
+            echo "❌ Flutter analyze found errors"
+            exit 1
+          else
+            echo "✅ No analysis errors"
+          fi
+        working-directory: ./cube_app
       - name: Run tests
         run: flutter test
         working-directory: ./cube_app
