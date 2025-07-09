@@ -16,12 +16,6 @@ Future<void> main() async {
       isLoggedIn: isLoggedIn,
     ),
   );
-  // runApp(
-  //   DevicePreview(
-  //     enabled: true, // Set to false in release mode if needed
-  //     builder: (context) => const MyApp(),
-  //   ),
-  // );
 }
 
 class MyApp extends StatelessWidget {
