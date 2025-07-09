@@ -4,18 +4,21 @@ class AppColors {
   static const Color loginbackground = Color(0xFF01205D);
 
   static const Color primary = Colors.white;
-  static const Color primaryWhite = Color(0xff000000);
+  static const Color primaryWhite = Color(0xFF000000);
 
   static const Color secondary = Colors.black;
-  static const Color textfeildcolor = Color(0xff0f2f2f2);
-  static const Color searchfeildcolor = Color(0xff0d1d1d1);
-  static const Color searchfeild = Color(0xff0a3a3a3);
 
-  static const Color primaryText = Color(0xff0282828);
-  static const Color secondaryText = Color(0xff0757575);
+  // Fixed these with valid hex values
+  static const Color textfeildcolor = Color(0xFFF2F2F2); // Light gray
+  static const Color searchfeildcolor = Color(0xFFD1D1D1); // Light gray
+  static const Color searchfeild = Color(0xFFA3A3A3); // Medium gray
 
-  static const Color buttoncolor = Color(0xFFEF7E01);
-  static const Color cardgreyColor = Color(0xffB5B5B5);
-  static const Color textcolorgrey = Color(0xff636363);
-  static const Color greenColor = Color(0xff0A5703);
+  static const Color primaryText = Color(0xFF282828); // Dark gray
+  static const Color secondaryText = Color(0xFF575757); // Mid-gray
+
+  static const Color buttoncolor = Color(0xFFEF7E01); // Orange
+  static const Color cardgreyColor = Color(0xFFB5B5B5); // Light gray
+  static const Color textcolorgrey = Color(0xFF636363); // Gray
+  static const Color greenColor = Color(0xFF0A5703); // Green
+  static const Color textdisableColor = Color(0xFFD1D1D1); // Light gray
 }

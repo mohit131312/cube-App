@@ -1,18 +1,34 @@
 import 'package:cube_app/component/app_text.dart';
+import 'package:cube_app/cube_engineer/dashboard_card/cube_casting_request/cube_casting_request_controller.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/cube_casting_request/cube_casting_request_screen.dart';
+import 'package:cube_app/cube_engineer/dashboard_card/view_test_result/view_test_result_controller.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/view_test_result/view_test_result_screen.dart';
-import 'package:cube_app/cube_engineer/dashboard_home/dashboard_home_controller.dart';
+import 'package:cube_app/cube_engineer/dashboard_card/dashboard_home/dashboard_home_controller.dart';
 import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
+import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DashboardHomeScreen extends StatelessWidget {
-  DashboardHomeScreen({super.key});
+  final int projectId;
+  final String projectName;
+  final int buildingId;
+
+  DashboardHomeScreen({
+    super.key,
+    required this.projectId,
+    required this.projectName,
+    required this.buildingId,
+  });
   final DashboardHomeController dashboardHomeController =
       Get.put(DashboardHomeController());
+  final ViewTestResultController viewTestResultController =
+      Get.put(ViewTestResultController());
+  final CubeCastingRequestController cubeCastingRequestController =
+      Get.put(CubeCastingRequestController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -86,11 +102,39 @@ class DashboardHomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = dashboardHomeController.selectGridData[index];
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (index == 0) {
-                        Get.to(() => CubeCastingRequestScreen());
+                        showLoaderDialog();
+                        await cubeCastingRequestController.resetAllData();
+                        bool success = await cubeCastingRequestController
+                            .getconcertingLevel(projectId, buildingId);
+                        await cubeCastingRequestController.getElement();
+                        await cubeCastingRequestController.getConcreteGrade();
+                        Get.back();
+
+                        if (success) {
+                          Get.to(() => CubeCastingRequestScreen(
+                                projectId: projectId,
+                                projectName: projectName,
+                                buildingId: buildingId,
+                              ));
+                        }
+                        print('Selected Project ID: $projectId');
+                        print('Selected Project Name: $projectName');
+                        print('Selected Building ID: $buildingId');
                       } else {
-                        Get.to(() => ViewTestResultScreen());
+                        viewTestResultController.resetData();
+                        showLoaderDialog();
+                        bool success = await viewTestResultController
+                            .getviewTestResult('', buildingId);
+                        Get.back();
+                        if (success) {
+                          Get.to(() => ViewTestResultScreen(
+                                projectId: projectId,
+                                projectName: projectName,
+                                buildingId: buildingId,
+                              ));
+                        }
                       }
                     },
                     child: Container(

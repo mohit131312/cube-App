@@ -89,6 +89,11 @@ class AppTextformfeildSmall extends StatelessWidget {
               width: 1,
             ),
           ),
+          errorStyle: TextStyle(
+            fontSize: 9.5, // or any small size you prefer
+            color: const Color.fromARGB(255, 183, 28, 16),
+            height: 1.2,
+          ),
           filled: true,
           fillColor: fillColor, // 👈 Use the parameter here
           focusedErrorBorder: OutlineInputBorder(

@@ -1,11 +1,15 @@
 import 'package:cube_app/component/app_text.dart';
+import 'package:cube_app/cube_engineer/dashboard_card/dashboard_card_controller.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/dashboard_card_screen.dart';
 import 'package:cube_app/cube_viewer/cube_Viewer_Screen.dart';
 import 'package:cube_app/lab_operator/lab_operator_screen.dart';
+import 'package:cube_app/login/login_screen.dart';
+import 'package:cube_app/remote_service.dart';
 import 'package:cube_app/select_role/select_role_controller.dart';
 import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
+import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +18,8 @@ class SelectRoleScreen extends StatelessWidget {
   SelectRoleScreen({super.key});
   final SelectRoleController selectRoleController =
       Get.put(SelectRoleController());
+  final DashboardCardController dashboardCardController =
+      Get.put(DashboardCardController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +58,21 @@ class SelectRoleScreen extends StatelessWidget {
               ),
             ),
           ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                  onTap: () async {
+                    await RemoteServices.logout();
+
+                    Get.offAll(() => LoginScreen());
+                  },
+                  child: Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  )),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -66,11 +87,18 @@ class SelectRoleScreen extends StatelessWidget {
                 itemCount: selectRoleController.selectRoles.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (index == 0) {
                         Get.to(() => CubeViewerScreen());
                       } else if (index == 1) {
-                        Get.to(() => DashboardCardScreen());
+                        showLoaderDialog();
+                        bool success =
+                            await dashboardCardController.getassignProject();
+                        Get.back();
+
+                        if (success) {
+                          Get.to(() => DashboardCardScreen());
+                        }
                       } else if (index == 2) {
                         Get.to(() => LabOperatorScreen());
                       }
@@ -90,8 +118,10 @@ class SelectRoleScreen extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
                               color: Colors.black.withOpacity(0.15),
-                              blurRadius: 10,
-                              spreadRadius: 0.5,
+                              //    blurRadius: 10,
+                              blurRadius: 3,
+                              spreadRadius: 0.2,
+                              // spreadRadius: 0.5,
                               offset: Offset(0, 0)),
                         ],
                       ),

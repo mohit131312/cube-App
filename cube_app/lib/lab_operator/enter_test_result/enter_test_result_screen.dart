@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cube_app/component/app_bottom_button.dart';
-import 'package:cube_app/component/app_datepicker.dart';
+import 'package:cube_app/component/app_date_picker_textform.dart';
 import 'package:cube_app/component/app_notes_textformfeild.dart';
+import 'package:cube_app/component/app_search_dropdown.dart';
 import 'package:cube_app/component/app_text.dart';
 import 'package:cube_app/component/app_textformfeild.dart';
 import 'package:cube_app/component/cube_test_result_input.dart';
@@ -9,6 +12,8 @@ import 'package:cube_app/lab_operator/enter_test_result/enter_test_result_contro
 import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
+import 'package:cube_app/utils/custom_loader.dart';
+import 'package:cube_app/utils/custome_popup.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +23,77 @@ class EnterTestResultScreen extends StatelessWidget {
   EnterTestResultScreen({super.key});
   EnterTestResultController enterTestResultController =
       Get.put(EnterTestResultController());
+  Future<bool> showConfirmationDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: Colors.white,
+          title: AppText(
+            text: 'Are You Sure?',
+            fontSize: AppFontsize.textSizeMediumm,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          content: AppText(
+              text: 'Are you sure you want to Submit Test Result',
+              fontSize: AppFontsize.textSizeSmall,
+              fontWeight: FontWeight.w500,
+              color: AppColors.searchfeild),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: AppText(
+                        text: 'Cancel',
+                        fontSize: AppFontsize.textSizeSmallm,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: AppColors.buttoncolor,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: AppText(
+                        text: 'Yes',
+                        fontSize: AppFontsize.textSizeSmallm,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+      },
+    );
+    return result ??
+        false; // fallback to false if dialog dismissed unexpectedly
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,6 +101,7 @@ class EnterTestResultScreen extends StatelessWidget {
       bottom: true,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           scrolledUnderElevation: 0.0,
           elevation: 0,
@@ -56,30 +133,19 @@ class EnterTestResultScreen extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container(
-                width: SizeConfig.widthMultiplier * 100,
-                height: SizeConfig.heightMultiplier * 100,
-                decoration: BoxDecoration(
-                  color: AppColors.buttoncolor,
-                ),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
+          child: Form(
+            key: enterTestResultController.formKey,
+            child: Column(
+              children: [
+                Container(
                   height: 1,
                   color: Colors.white,
                 ),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                Container(
+                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.buttoncolor,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -105,7 +171,7 @@ class EnterTestResultScreen extends StatelessWidget {
                         onFieldSubmitted: (_) {
                           enterTestResultController.batchnoFocusNode.unfocus();
                         },
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -113,11 +179,35 @@ class EnterTestResultScreen extends StatelessWidget {
                           }
                           return null;
                         },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        onChanged: (value) {},
+                        onChanged: (value) async {
+                          await enterTestResultController.getBacthData(
+                              enterTestResultController.batchnoController.text
+                                  .trim());
+                        },
                       ),
+                      Obx(() {
+                        final msg = enterTestResultController.msg.value;
+                        final batchNo = enterTestResultController
+                            .batchnoController.text
+                            .trim();
+
+                        // Only show message if batchNo is not empty and msg is not empty
+                        if (batchNo.isEmpty || msg.isEmpty) {
+                          return SizedBox.shrink();
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            msg,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        );
+                      }),
                       SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
                         text: AppConstText.scheduledate,
@@ -126,27 +216,46 @@ class EnterTestResultScreen extends StatelessWidget {
                         color: AppColors.primary,
                       ),
                       SizedBox(height: SizeConfig.heightMultiplier * 0.5),
-                      Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: AppColors.primary,
-                              width: 1,
-                            ),
-                          ),
-                          child: AppDatepicker(
-                            controller:
-                                enterTestResultController.dateController,
-                            onDateSelected: (date) =>
-                                enterTestResultController.updateDate(date),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a date';
-                              }
-                              return null;
-                            },
-                          )),
+                      Obx(
+                        () => AppSearchDropdown(
+                          key: enterTestResultController.scheduledateFormKey,
+                          items: enterTestResultController.batchNoList
+                              .map((batch) => batch.testingDate ?? '')
+                              .toList(),
+                          selectedItem: enterTestResultController
+                                  .scheduleDate.value.isNotEmpty
+                              ? enterTestResultController.scheduleDate.value
+                              : null,
+                          hintText: 'Select  Date',
+                          onChanged: (value) {
+                            enterTestResultController.scheduleDate.value =
+                                value!;
+                            final selectedBatch = enterTestResultController
+                                .batchNoList
+                                .firstWhereOrNull(
+                                    (batch) => batch.testingDate == value);
+
+                            if (selectedBatch != null) {
+                              final cubeCount = selectedBatch.cubeCount ?? 0;
+                              enterTestResultController.cubeCount.value =
+                                  cubeCount;
+                              enterTestResultController.cubeReuestingId.value =
+                                  selectedBatch.id ?? 0;
+                              enterTestResultController
+                                  .initCubeInputs(cubeCount);
+                            }
+                            print("📅 Selected schedule date: $value");
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (value == null ||
+                                value.toString().trim().isEmpty) {
+                              return 'Please select a Date';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                       SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
                         text: AppConstText.dateoftesting,
@@ -155,27 +264,18 @@ class EnterTestResultScreen extends StatelessWidget {
                         color: AppColors.primary,
                       ),
                       SizedBox(height: SizeConfig.heightMultiplier * 0.5),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.primary,
-                            width: 1,
-                          ),
-                        ),
-                        child: AppDatepicker(
-                          controller:
-                              enterTestResultController.dateTestingController,
-                          onDateSelected: (date) =>
-                              enterTestResultController.updateTestingDate(date),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a date';
-                            }
-                            return null;
-                          },
-                        ),
+                      AppDatePickerTextform(
+                        key: enterTestResultController.dateOfTestingFormkey,
+                        controller:
+                            enterTestResultController.dateTestingController,
+                        onDateSelected: (date) =>
+                            enterTestResultController.updateTestingDate(date),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a date';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
@@ -209,18 +309,13 @@ class EnterTestResultScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                top: SizeConfig.heightMultiplier * 52,
-                child: Container(
+                Container(
                   padding: EdgeInsets.only(
                       top: SizeConfig.heightMultiplier * 2,
                       bottom: SizeConfig.heightMultiplier * 0.5,
                       left: 20,
                       right: 20),
                   width: SizeConfig.widthMultiplier * 100,
-                  height: SizeConfig.heightMultiplier * 64,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -228,19 +323,19 @@ class EnterTestResultScreen extends StatelessWidget {
                       topRight: Radius.circular(24),
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        AppText(
-                          text: "Enter Cube Test Result",
-                          fontSize: AppFontsize.textSizeSmall,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryText,
-                        ),
-                        SizedBox(height: SizeConfig.heightMultiplier * 0.5),
-                        ListView.separated(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AppText(
+                        text: "Enter Cube Test Result",
+                        fontSize: AppFontsize.textSizeSmall,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryText,
+                      ),
+                      SizedBox(height: SizeConfig.heightMultiplier * 0.5),
+                      Obx(
+                        () => ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: enterTestResultController.cubeCount.value,
@@ -271,28 +366,123 @@ class EnterTestResultScreen extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: SizeConfig.heightMultiplier * 5),
-                        AppBottomButton(
+                      ),
+                      SizedBox(height: SizeConfig.heightMultiplier * 5),
+                      AppBottomButton(
                           leftText: 'Clear',
                           rightText: 'Send For Approval',
-                          onLeftTap: () {},
-                          onRightTap: () {
-                            // if (_formKey.currentState!.validate()) {
-                            // } else {}
+                          onLeftTap: () {
+                            enterTestResultController.clearFormData();
                           },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
+                          onRightTap: () async {
+                            await textfeildValidate(context);
+                            bool confirm =
+                                await showConfirmationDialog(context);
+                            log("confirm $confirm");
+
+                            if (confirm) {
+                              if (enterTestResultController
+                                  .formKey.currentState!
+                                  .validate()) {
+                                showLoaderDialog();
+                                bool success = await enterTestResultController
+                                    .saveTestResult(context);
+                                Get.back();
+                                if (success) {
+                                  Get.back();
+                                  showDialog(
+                                    context: Get.context!,
+                                    builder: (_) => CustomValidationPopup(
+                                      message: enterTestResultController
+                                          .validatemsg.value,
+                                      icon: Icons.check_circle_outline,
+                                      iconColor: Colors.green,
+                                      onOk: () {},
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          }),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void scrollToWidget(GlobalKey key) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = key.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.1,
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  Future<void> textfeildValidate(BuildContext context) async {
+    if (enterTestResultController.batchnoController.text.trim().isEmpty) {
+      FocusScope.of(context)
+          .requestFocus(enterTestResultController.batchnoFocusNode);
+      return;
+    }
+    if (enterTestResultController.scheduleDate.value.trim().isEmpty) {
+      scrollToWidget(enterTestResultController.scheduledateFormKey);
+      return;
+    }
+    if (enterTestResultController.dateTestingController.text.trim().isEmpty) {
+      scrollToWidget(enterTestResultController.dateOfTestingFormkey);
+      return;
+    }
+
+    if (enterTestResultController.remarkController.text.trim().isEmpty) {
+      FocusScope.of(context)
+          .requestFocus(enterTestResultController.remarkFocusNode);
+      return;
+    }
+
+    for (int i = 0; i < enterTestResultController.cubeCount.value; i++) {
+      if (enterTestResultController.lengthControllers[i].text.trim().isEmpty) {
+        FocusScope.of(context)
+            .requestFocus(enterTestResultController.lengthFocusNodes[i]);
+        return;
+      }
+
+      if (enterTestResultController.widthControllers[i].text.trim().isEmpty) {
+        FocusScope.of(context)
+            .requestFocus(enterTestResultController.widthFocusNodes[i]);
+        return;
+      }
+
+      if (enterTestResultController.heightControllers[i].text.trim().isEmpty) {
+        FocusScope.of(context)
+            .requestFocus(enterTestResultController.heightFocusNodes[i]);
+        return;
+      }
+
+      if (enterTestResultController.weightControllers[i].text.trim().isEmpty) {
+        FocusScope.of(context)
+            .requestFocus(enterTestResultController.weightFocusNodes[i]);
+        return;
+      }
+
+      if (enterTestResultController.loadControllers[i].text.trim().isEmpty) {
+        FocusScope.of(context)
+            .requestFocus(enterTestResultController.loadFocusNodes[i]);
+        return;
+      }
+    }
   }
 }

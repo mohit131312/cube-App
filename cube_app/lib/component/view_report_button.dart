@@ -15,7 +15,7 @@ class ViewReportButton extends StatelessWidget {
   final Color textColor;
 
   const ViewReportButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onTap,
     required this.iconPath,
@@ -24,7 +24,7 @@ class ViewReportButton extends StatelessWidget {
     this.borderColor = AppColors.buttoncolor,
     this.backgroundColor = Colors.white,
     this.textColor = AppColors.buttoncolor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -5,11 +5,5 @@ class SelectRoleController extends GetxController {
     'CUBE VIEWER',
     'CUBE ENGINEER',
     'CUBE LAB OPERATOR',
-    'CUBE VIEWER',
-    'CUBE ENGINEER',
-    'CUBE LAB OPERATOR',
-    'CUBE VIEWER',
-    'CUBE ENGINEER',
-    'CUBE LAB OPERATOR',
   ];
 }

@@ -6,18 +6,28 @@ import 'package:cube_app/component/app_text.dart';
 import 'package:cube_app/component/app_textformfeild.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/cube_casting_request/cube_casting_request_controller.dart';
 import 'package:cube_app/utils/app_color.dart';
+import 'package:cube_app/utils/app_confimationdialog.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
+import 'package:cube_app/utils/custom_loader.dart';
+import 'package:cube_app/utils/custome_popup.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CubeCastingRequestScreen extends StatelessWidget {
-  CubeCastingRequestScreen({super.key});
+  final int projectId;
+  final String projectName;
+  final int buildingId;
 
-  final CubeCastingRequestController cubeCastingRequestController =
-      Get.put(CubeCastingRequestController());
+  CubeCastingRequestScreen({
+    super.key,
+    required this.projectId,
+    required this.projectName,
+    required this.buildingId,
+  });
+  final CubeCastingRequestController cubeCastingRequestController = Get.find();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -88,9 +98,10 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   SizedBox(height: SizeConfig.heightMultiplier * 1),
                   Obx(
                     () => AppSearchDropdown(
-                      items: cubeCastingRequestController.dummyNames
+                      key: cubeCastingRequestController.concertingKey,
+                      items: cubeCastingRequestController.concertingLevelList
                           .map(
-                            (name) => name,
+                            (name) => name.floorName!,
                           )
                           .toList(),
                       selectedItem: cubeCastingRequestController
@@ -102,6 +113,12 @@ class CubeCastingRequestScreen extends StatelessWidget {
                       onChanged: (value) {
                         cubeCastingRequestController
                             .selectLevelOfConcerting.value = value ?? '';
+                        final selected = cubeCastingRequestController
+                            .concertingLevelList
+                            .firstWhereOrNull((e) => e.floorName == value);
+                        cubeCastingRequestController
+                            .selectLevelOfConcertingId.value = selected?.id;
+                        cubeCastingRequestController.printSelectedValues();
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -122,9 +139,10 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   SizedBox(height: SizeConfig.heightMultiplier * 1),
                   Obx(
                     () => AppSearchDropdown(
-                      items: cubeCastingRequestController.dummyNames
+                      key: cubeCastingRequestController.elementKey,
+                      items: cubeCastingRequestController.elementList
                           .map(
-                            (name) => name,
+                            (ele) => ele.elementName!,
                           )
                           .toList(),
                       selectedItem: cubeCastingRequestController
@@ -135,6 +153,12 @@ class CubeCastingRequestScreen extends StatelessWidget {
                       onChanged: (value) {
                         cubeCastingRequestController.selectElement.value =
                             value ?? '';
+                        final selected = cubeCastingRequestController
+                            .elementList
+                            .firstWhereOrNull((e) => e.elementName == value);
+                        cubeCastingRequestController.selectElementId.value =
+                            selected?.id;
+                        cubeCastingRequestController.printSelectedValues();
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -155,13 +179,14 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   SizedBox(height: SizeConfig.heightMultiplier * 1),
                   Obx(
                     () => AppSearchDropdown(
-                      items: cubeCastingRequestController.dummyNames
+                      key: cubeCastingRequestController.gradeKey,
+                      items: cubeCastingRequestController.concrateGradeList
                           .map(
-                            (name) => name,
+                            (name) => name.gradeName!,
                           )
                           .toList(),
                       selectedItem: cubeCastingRequestController
-                              .selectElement.value.isNotEmpty
+                              .selectConcertOfGrade.value.isNotEmpty
                           ? cubeCastingRequestController
                               .selectConcertOfGrade.value
                           : null,
@@ -169,6 +194,12 @@ class CubeCastingRequestScreen extends StatelessWidget {
                       onChanged: (value) {
                         cubeCastingRequestController
                             .selectConcertOfGrade.value = value ?? '';
+                        final selected = cubeCastingRequestController
+                            .concrateGradeList
+                            .firstWhereOrNull((e) => e.gradeName == value);
+                        cubeCastingRequestController
+                            .selectConcertOfGradeId.value = selected?.id;
+                        cubeCastingRequestController.printSelectedValues();
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -181,6 +212,7 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.heightMultiplier * 2),
                   AppText(
+                    key: cubeCastingRequestController.castingKey,
                     text: AppConstText.proposedDate,
                     fontSize: AppFontsize.textSizeSmall,
                     fontWeight: FontWeight.w500,
@@ -215,18 +247,35 @@ class CubeCastingRequestScreen extends StatelessWidget {
                       cubeCastingRequestController.cubicMeterFocusNode
                           .unfocus();
                     },
-                    keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return 'Cubic Meters cannot be empty';
                       }
+                      final numValue = int.tryParse(value.trim());
+                      if (numValue == null || numValue < 0 || numValue > 500) {
+                        return 'Enter a value between 0 and 500';
+                      }
                       return null;
                     },
+                    keyboardType: TextInputType.number,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      LengthLimitingTextInputFormatter(3),
                     ],
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      final cubicMeter = int.tryParse(value.trim());
+
+                      if (cubicMeter != null) {
+                        final samples = cubeCastingRequestController
+                            .calculateCubes(cubicMeter);
+                        cubeCastingRequestController.noOfCubeController.text =
+                            samples?.toString() ?? '';
+                      } else {
+                        cubeCastingRequestController.noOfCubeController.text =
+                            '';
+                      }
+                    },
                   ),
                   SizedBox(height: SizeConfig.heightMultiplier * 2),
                   AppText(
@@ -237,6 +286,8 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.heightMultiplier * 1),
                   AppTextFormfeild(
+                    readOnly: true,
+                    fillColor: AppColors.textdisableColor,
                     controller: cubeCastingRequestController.noOfCubeController,
                     hintText: 'No of Cube',
                     focusNode: cubeCastingRequestController.noOfCubeFocusNode,
@@ -298,18 +349,127 @@ class CubeCastingRequestScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppBottomButton(
-                leftText: 'Clear',
-                rightText: 'Send For Approval',
-                onLeftTap: () {},
-                onRightTap: () {
-                  if (_formKey.currentState!.validate()) {
-                  } else {}
-                },
-              ),
+                  leftText: 'Clear',
+                  rightText: 'Send For Approval',
+                  onLeftTap: () async {
+                    await cubeCastingRequestController.resetFormData();
+                  },
+                  onRightTap: () async {
+                    await textfeildValidate(context);
+                    if (_formKey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) => ConfirmationDialog(
+                          title: 'Are You Sure?',
+                          message: 'You want to send data for Approval?',
+                          onConfirm: () async {
+                            Navigator.of(dialogContext).pop();
+
+                            showLoaderDialog();
+
+                            var success = await cubeCastingRequestController
+                                .postForApproval(
+                              projectId,
+                              buildingId,
+                              cubeCastingRequestController
+                                  .selectLevelOfConcertingId.value,
+                              cubeCastingRequestController
+                                  .selectElementId.value,
+                              cubeCastingRequestController
+                                  .selectConcertOfGradeId.value,
+                              cubeCastingRequestController.dateController.text
+                                  .trim(),
+                              cubeCastingRequestController
+                                  .cubicMeterController.text
+                                  .trim(),
+                              cubeCastingRequestController
+                                  .noOfCubeController.text
+                                  .trim(),
+                              cubeCastingRequestController.notesController.text
+                                  .trim(),
+                              context,
+                            );
+
+                            Get.back();
+
+                            if (success) {
+                              Get.back();
+
+                              showDialog(
+                                context: Get.context!,
+                                builder: (_) => CustomValidationPopup(
+                                  message: success
+                                      ? "Casting Request Sent For Approval Successfully"
+                                      : "Something went wrong. Please try again.",
+                                  icon: success
+                                      ? Icons.check_circle_outline
+                                      : Icons.error_outline,
+                                  iconColor:
+                                      success ? Colors.green : Colors.red,
+                                  onOk: () {},
+                                ),
+                              );
+                            }
+                          },
+                          onCancel: () {
+                            Navigator.of(dialogContext).pop();
+                          },
+                        ),
+                      );
+                    }
+                  }),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void scrollToWidget(GlobalKey key) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = key.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.1,
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  Future<void> textfeildValidate(BuildContext context) async {
+    if (cubeCastingRequestController.selectLevelOfConcerting.value
+        .trim()
+        .isEmpty) {
+      scrollToWidget(cubeCastingRequestController.concertingKey);
+      return;
+    }
+
+    if (cubeCastingRequestController.selectElement.value.trim().isEmpty) {
+      scrollToWidget(cubeCastingRequestController.elementKey);
+      return;
+    }
+    if (cubeCastingRequestController.selectConcertOfGrade.value
+        .trim()
+        .isEmpty) {
+      scrollToWidget(cubeCastingRequestController.gradeKey);
+      return;
+    }
+    if (cubeCastingRequestController.dateController.text.trim().isEmpty) {
+      scrollToWidget(cubeCastingRequestController.castingKey);
+      return;
+    }
+    if (cubeCastingRequestController.cubicMeterController.text.trim().isEmpty) {
+      FocusScope.of(context)
+          .requestFocus(cubeCastingRequestController.cubicMeterFocusNode);
+      return;
+    }
+    if (cubeCastingRequestController.notesController.text.trim().isEmpty) {
+      FocusScope.of(context)
+          .requestFocus(cubeCastingRequestController.notesFocusNode);
+      return;
+    }
   }
 }

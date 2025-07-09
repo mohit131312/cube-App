@@ -6,7 +6,7 @@ import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CubeTestResultInputCard extends StatelessWidget {
+class CubeTestResultPrefill extends StatelessWidget {
   final String title;
   final TextEditingController lengthController;
   final FocusNode lengthFocusNode;
@@ -22,8 +22,16 @@ class CubeTestResultInputCard extends StatelessWidget {
 
   final TextEditingController loadController;
   final FocusNode loadFocusNode;
+  final TextEditingController csAreaController;
+  final FocusNode csAreaFocusNode;
 
-  const CubeTestResultInputCard({
+  final TextEditingController densityController;
+  final FocusNode densityFocusNodes;
+
+  final TextEditingController strengthControllers;
+  final FocusNode strengthFocusNodes;
+
+  const CubeTestResultPrefill({
     super.key,
     required this.title,
     required this.lengthController,
@@ -36,6 +44,12 @@ class CubeTestResultInputCard extends StatelessWidget {
     required this.weightFocusNode,
     required this.loadController,
     required this.loadFocusNode,
+    required this.csAreaController,
+    required this.csAreaFocusNode,
+    required this.densityController,
+    required this.densityFocusNodes,
+    required this.strengthControllers,
+    required this.strengthFocusNodes,
   });
 
   @override
@@ -74,15 +88,17 @@ class CubeTestResultInputCard extends StatelessWidget {
                     color: Colors.white),
               ),
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Left column
                     SizedBox(
-                      width: SizeConfig.widthMultiplier * 38,
+                      width: SizeConfig.widthMultiplier * 39,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildField(
@@ -102,14 +118,21 @@ class CubeTestResultInputCard extends StatelessWidget {
                             controller: loadController,
                             focusNode: loadFocusNode,
                           ),
+                          SizedBox(height: SizeConfig.heightMultiplier * 1.3),
+                          _buildField(
+                            label: "Density (mm2)	",
+                            controller: densityController,
+                            focusNode: densityFocusNodes,
+                          ),
                         ],
                       ),
                     ),
                     // Right column
                     SizedBox(
-                      width: SizeConfig.widthMultiplier * 38,
+                      width: SizeConfig.widthMultiplier * 39.9,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildField(
                             label: "Width (mm)",
@@ -121,6 +144,18 @@ class CubeTestResultInputCard extends StatelessWidget {
                             label: "Weight (mm)",
                             controller: weightController,
                             focusNode: weightFocusNode,
+                          ),
+                          SizedBox(height: SizeConfig.heightMultiplier * 1.3),
+                          _buildField(
+                            label: "C/s area",
+                            controller: csAreaController,
+                            focusNode: csAreaFocusNode,
+                          ),
+                          SizedBox(height: SizeConfig.heightMultiplier * 1.3),
+                          _buildField(
+                            label: "Copm.Strenght(N/mm2)",
+                            controller: strengthControllers,
+                            focusNode: strengthFocusNodes,
                           ),
                         ],
                       ),
@@ -151,6 +186,7 @@ class CubeTestResultInputCard extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig.heightMultiplier * 1),
         AppTextformfeildSmall(
+          readOnly: true,
           controller: controller,
           hintText: 'Enter ${label.split(' ')[0]}',
           focusNode: focusNode,
@@ -158,10 +194,8 @@ class CubeTestResultInputCard extends StatelessWidget {
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           validator: (value) {
-            final cleanLabel = label.replaceAll(
-                RegExp(r'\s*\(.*?\)'), ''); // removes (mm), (kg), etc.
             if (value == null || value.trim().isEmpty) {
-              return '$cleanLabel cannot be empty';
+              return '$label cannot be empty';
             }
             return null;
           },

@@ -160,22 +160,33 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppElevatedButton(
                                 text: 'Log In',
                                 onPressed: () async {
-                                  // if (formKey.currentState?.validate() ??
-                                  //     false) {
-                                  Get.to(() => SelectRoleScreen());
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Text(
-                                        "You have successfully logged in.",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: AppColors.buttoncolor,
-                                      duration: const Duration(seconds: 5),
-                                      margin: const EdgeInsets.all(12),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                  //}
+                                  if (formKey.currentState?.validate() ??
+                                      false) {
+                                    await loginController.login(
+                                        loginController.emailController.text,
+                                        loginController
+                                            .passwordController.text);
+                                    if (loginController.logStatus) {
+                                      Get.to(() => SelectRoleScreen());
+
+                                      loginController.clearLoginfeild();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            "You have successfully logged in.",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor:
+                                              AppColors.buttoncolor,
+                                          duration: const Duration(seconds: 3),
+                                          margin: const EdgeInsets.all(12),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    }
+                                  }
                                 },
                               ),
                             ],

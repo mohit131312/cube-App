@@ -16,6 +16,8 @@ class AppConstText {
   //cube casting request
   static const String cubeCastingRequest = 'Cube Casting Request';
   static const String requestForCubeCasting = 'Request For Cube Casting';
+  static const String buildingName = 'Building Name';
+
   static const String leveloFConcerting = 'Level of Concerting';
   static const String element = 'Element';
   static const String concrateGrade = 'Concrete Grade';

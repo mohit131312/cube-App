@@ -6,14 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppDatepicker extends StatelessWidget {
+class AppDatePickerTextform extends StatelessWidget {
   final TextEditingController controller;
   final Function(DateTime) onDateSelected;
   final String? Function(String?)? validator;
   final String hintText;
   final bool readOnly;
 
-  const AppDatepicker({
+  const AppDatePickerTextform({
     super.key,
     required this.controller,
     required this.onDateSelected,
@@ -90,9 +90,7 @@ class AppDatepicker extends StatelessWidget {
                           color: AppColors.secondaryText,
                         ),
                       ),
-                      SizedBox(
-                        width: 50,
-                      ),
+                      const SizedBox(width: 50),
                       GestureDetector(
                         onTap: () {
                           onDateSelected(selectedDate);
@@ -127,20 +125,21 @@ class AppDatepicker extends StatelessWidget {
         fontWeight: FontWeight.w400,
         color: AppColors.primaryText,
       ),
+      readOnly: readOnly,
+      validator: validator,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         hintText: hintText,
         hintStyle: TextStyle(
           fontSize: AppFontsize.textSizeSmall,
           fontWeight: FontWeight.w400,
           color: AppColors.searchfeild,
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 13, horizontal: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 13, horizontal: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: AppColors.primary,
-            width: 1,
-          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -156,6 +155,20 @@ class AppDatepicker extends StatelessWidget {
             width: 1,
           ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 126, 16, 9),
+            width: 1,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 126, 16, 9),
+            width: 1,
+          ),
+        ),
         suffixIcon: Padding(
           padding: const EdgeInsets.all(11),
           child: GestureDetector(
@@ -168,8 +181,6 @@ class AppDatepicker extends StatelessWidget {
           ),
         ),
       ),
-      readOnly: readOnly,
-      validator: validator,
     );
   }
 }
