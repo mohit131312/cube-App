@@ -1,7 +1,7 @@
 import 'package:cube_app/component/app_text.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/dashboard_card_controller.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/dashboard_card_screen.dart';
-import 'package:cube_app/cube_viewer/cube_Viewer_Screen.dart';
+import 'package:cube_app/cube_viewer/cube_viewer_screen.dart';
 import 'package:cube_app/lab_operator/lab_operator_screen.dart';
 import 'package:cube_app/login/login_screen.dart';
 import 'package:cube_app/remote_service.dart';

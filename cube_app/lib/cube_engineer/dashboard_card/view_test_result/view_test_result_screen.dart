@@ -1,6 +1,6 @@
 import 'package:cube_app/component/app_datepicker.dart';
 import 'package:cube_app/component/app_text.dart';
-import 'package:cube_app/cube_engineer/dashboard_card/view_test_result/card_details/card_details_Screen.dart';
+import 'package:cube_app/cube_engineer/dashboard_card/view_test_result/card_details/card_details_screen.dart';
 import 'package:cube_app/cube_engineer/dashboard_card/view_test_result/view_test_result_controller.dart';
 
 import 'package:cube_app/utils/app_color.dart';
