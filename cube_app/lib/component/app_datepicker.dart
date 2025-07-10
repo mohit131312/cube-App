@@ -162,8 +162,8 @@ class AppDatepicker extends StatelessWidget {
             onTap: () => _showDatePicker(context),
             child: Image.asset(
               'assets/icons/calendar.png',
-              height: SizeConfig.imageSizeMultiplier * 3,
-              width: SizeConfig.imageSizeMultiplier * 3,
+              height: 10,
+              width: 10,
             ),
           ),
         ),

@@ -6,6 +6,8 @@ import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_elevated_button.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
+import 'package:cube_app/utils/check_internet.dart';
+import 'package:cube_app/utils/custome_popup.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -162,28 +164,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () async {
                                   if (formKey.currentState?.validate() ??
                                       false) {
-                                    await loginController.login(
-                                        loginController.emailController.text,
-                                        loginController
-                                            .passwordController.text);
-                                    if (loginController.logStatus) {
-                                      Get.to(() => SelectRoleScreen());
+                                    if (await CheckInternet.checkInternet()) {
+                                      await loginController.login(
+                                          loginController.emailController.text,
+                                          loginController
+                                              .passwordController.text);
+                                      if (loginController.logStatus) {
+                                        Get.offAll(() => SelectRoleScreen());
 
-                                      loginController.clearLoginfeild();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: const Text(
-                                            "You have successfully logged in.",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                        loginController.clearLoginfeild();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              "You have successfully logged in.",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            backgroundColor:
+                                                AppColors.buttoncolor,
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            margin: const EdgeInsets.all(12),
+                                            behavior: SnackBarBehavior.floating,
                                           ),
-                                          backgroundColor:
-                                              AppColors.buttoncolor,
-                                          duration: const Duration(seconds: 3),
-                                          margin: const EdgeInsets.all(12),
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
+                                        );
+                                      }
+                                    } else {
+                                      await showDialog(
+                                        context: Get.context!,
+                                        builder: (BuildContext context) {
+                                          return CustomValidationPopup(
+                                              icon: Icons.info,
+                                              iconColor: AppColors.buttoncolor,
+                                              message:
+                                                  "Please check your internet connection.");
+                                        },
                                       );
                                     }
                                   }
