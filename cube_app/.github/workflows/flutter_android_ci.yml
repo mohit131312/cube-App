@@ -9,8 +9,8 @@ on:
 
 jobs:
   build:
-    name: Build APK on Ubuntu
-    runs-on: ubuntu-latest
+    name: Build APK on Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository

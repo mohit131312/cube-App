@@ -54,7 +54,7 @@ class ScheduleActReportController extends GetxController {
         return false;
       }
 
-      final project = await scheduleActivityFromJson(response.body);
+      final project = scheduleActivityFromJson(response.body);
 
       log("project data ${project.data}");
 
@@ -105,7 +105,7 @@ class ScheduleActReportController extends GetxController {
         return false;
       }
 
-      final project = await scheduleActivityFromJson(response.body);
+      final project = scheduleActivityFromJson(response.body);
 
       log("project data  from date ${project.data}");
 
