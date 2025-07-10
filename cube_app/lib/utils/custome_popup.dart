@@ -25,7 +25,7 @@ class CustomValidationPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Initialize SizeConfig
-    SizeConfig.init(context);
+    //  SizeConfig.init(context);
 
     return Dialog(
       shape: RoundedRectangleBorder(

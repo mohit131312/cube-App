@@ -119,8 +119,8 @@ class SelectRoleScreen extends StatelessWidget {
                           BoxShadow(
                               color: Colors.black.withOpacity(0.15),
                               //    blurRadius: 10,
-                              blurRadius: 3,
-                              spreadRadius: 0.2,
+                              blurRadius: 2,
+                              spreadRadius: 0.1,
                               // spreadRadius: 0.5,
                               offset: Offset(0, 0)),
                         ],

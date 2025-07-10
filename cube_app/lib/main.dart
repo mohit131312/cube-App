@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(
         builder: (context, orientation) {
-          SizeConfig.initWithConstraints(constraints, orientation);
+          SizeConfig().init(constraints, orientation);
+
+          // SizeConfig.initWithConstraints(constraints, orientation);
 
           return GetMaterialApp(
             // locale: DevicePreview.locale(context),
