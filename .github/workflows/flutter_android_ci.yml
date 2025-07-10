@@ -1,3 +1,51 @@
+# name: Flutter Android CI/CD
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+#   workflow_dispatch: # 👈 Add manual trigger
+
+# jobs:
+#   build:
+#     name: Build APK on Windows
+#     runs-on: windows-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           flutter-version: "3.27.0"
+
+#       - name: Install dependencies
+#         run: flutter pub get
+#         working-directory: ./cube_app
+
+#       - name: Analyze code
+#         run: flutter analyze
+#         working-directory: ./cube_app
+
+#       - name: Run tests
+#         run: flutter test
+#         working-directory: ./cube_app
+
+#       - name: Build APK
+#         run: flutter build apk --release
+#         working-directory: ./cube_app
+
+#       - name: List APK directory
+#         run: ls -la build/app/outputs/flutter-apk
+#         working-directory: ./cube_app
+
+#       - name: Upload build artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: release-apk
+#           path: cube_app/build/app/outputs/flutter-apk/app-release.apk
 name: Flutter Android CI/CD
 
 on:
@@ -5,12 +53,12 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch: # 👈 Add manual trigger
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build APK on Ubuntu
-    runs-on: ubuntu-latest
+    name: Build APK on Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -19,30 +67,25 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.27.0"
+          flutter-version: "3.27.0" # Or use "stable" to always get latest stable
 
       - name: Install dependencies
         run: flutter pub get
-        working-directory: ./cube_app
 
       - name: Analyze code
         run: flutter analyze
-        working-directory: ./cube_app
 
       - name: Run tests
         run: flutter test
-        working-directory: ./cube_app
 
       - name: Build APK
         run: flutter build apk --release
-        working-directory: ./cube_app
 
       - name: List APK directory
         run: ls -la build/app/outputs/flutter-apk
-        working-directory: ./cube_app
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: cube_app/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
