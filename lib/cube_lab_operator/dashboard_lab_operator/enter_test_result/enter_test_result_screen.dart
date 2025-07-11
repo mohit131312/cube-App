@@ -150,7 +150,7 @@ class EnterTestResultScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: SizeConfig.heightMultiplier * 2),
+                      SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
                         text: AppConstText.cubetest,
                         fontSize: AppFontsize.textSizeSmallm,
