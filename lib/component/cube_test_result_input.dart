@@ -118,7 +118,7 @@ class CubeTestResultInputCard extends StatelessWidget {
                           ),
                           SizedBox(height: SizeConfig.heightMultiplier * 1.3),
                           _buildField(
-                            label: "Weight (mm)",
+                            label: "Weight (kg)",
                             controller: weightController,
                             focusNode: weightFocusNode,
                           ),

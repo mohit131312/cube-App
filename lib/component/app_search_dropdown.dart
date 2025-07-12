@@ -33,123 +33,69 @@ class AppSearchDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: !enabled,
-      child: SizedBox(
-        height: 46,
-        child: DropdownSearch<String>(
-          autoValidateMode: autovalidateMode,
-          popupProps: PopupProps.menu(
-            fit: FlexFit.loose,
+      child: DropdownSearch<String>(
+        autoValidateMode: autovalidateMode,
+        popupProps: PopupProps.menu(
+          fit: FlexFit.loose,
 
-            menuProps: MenuProps(
-              barrierDismissible: true,
-              barrierColor: Colors.transparent,
-              backgroundColor: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              elevation: 8,
-            ),
-            scrollbarProps: ScrollbarProps(
-              thumbVisibility: true,
-              thickness: 3, // Sleeker, modern feel
-              radius: const Radius.circular(8), // Smooth rounded edges
-              trackVisibility: true,
-              interactive: true,
-              mainAxisMargin: 2,
-              crossAxisMargin: 2,
-              fadeDuration: const Duration(milliseconds: 200),
-              timeToFade: const Duration(milliseconds: 800),
-              thumbColor: AppColors.buttoncolor,
-              trackColor: const Color.fromARGB(26, 101, 99, 99),
-              trackBorderColor: Colors.transparent,
-            ),
-
-            // constraints: BoxConstraints(
-            //   maxHeight: (items.length * 80).toDouble().clamp(140, 300),
-            // ), //
-            constraints: BoxConstraints(
-              maxHeight: popupMaxHeight ??
-                  // (items.length * 80).toDouble().clamp(140, 300),
-                  SizeConfig.heightMultiplier * 32,
-            ),
-            searchDelay: Duration.zero,
-            showSearchBox: true,
-            itemBuilder: (context, item, isSelected) {
-              return Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 20, top: 5, bottom: 10),
-                  child: Text(
-                    item,
-                    style: GoogleFonts.inter(
-                      fontSize: AppFontsize.textSizeSmall,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors
-                          .primaryText, // Disable styling if applicable                ),
-                    ),
-                  ));
-            },
-            searchFieldProps: TextFieldProps(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white, // ✅ Ensure background remains white
-                hintText: 'Search...',
-                hintStyle: GoogleFonts.inter(
-                  fontSize: AppFontsize.textSizeSmall,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.searchfeild,
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      BorderSide(color: AppColors.searchfeildcolor, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      BorderSide(color: AppColors.searchfeildcolor, width: 1),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: const Color.fromARGB(255, 126, 16, 9),
-                    width: 1,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: const Color.fromARGB(255, 126, 16, 9),
-                    width: 1,
-                  ),
-                ),
-              ),
-            ),
+          menuProps: MenuProps(
+            barrierDismissible: true,
+            barrierColor: Colors.transparent,
+            backgroundColor: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            elevation: 8,
           ),
-          validator: validator,
-          items: items,
-          selectedItem: selectedItem,
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            baseStyle: GoogleFonts.inter(
-              fontSize: AppFontsize.textSizeSmall,
-              fontWeight: FontWeight.w400,
-              color: AppColors.primaryText,
-            ),
-            dropdownSearchDecoration: InputDecoration(
-              hintText: hintText,
+          scrollbarProps: ScrollbarProps(
+            thumbVisibility: true,
+            thickness: 3, // Sleeker, modern feel
+            radius: const Radius.circular(8), // Smooth rounded edges
+            trackVisibility: true,
+            interactive: true,
+            mainAxisMargin: 2,
+            crossAxisMargin: 2,
+            fadeDuration: const Duration(milliseconds: 200),
+            timeToFade: const Duration(milliseconds: 800),
+            thumbColor: AppColors.buttoncolor,
+            trackColor: const Color.fromARGB(26, 101, 99, 99),
+            trackBorderColor: Colors.transparent,
+          ),
+
+          // constraints: BoxConstraints(
+          //   maxHeight: (items.length * 80).toDouble().clamp(140, 300),
+          // ), //
+          constraints: BoxConstraints(
+            maxHeight: popupMaxHeight ??
+                // (items.length * 80).toDouble().clamp(140, 300),
+                SizeConfig.heightMultiplier * 32,
+          ),
+          searchDelay: Duration.zero,
+          showSearchBox: true,
+          itemBuilder: (context, item, isSelected) {
+            return Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 20, top: 5, bottom: 10),
+                child: Text(
+                  item,
+                  style: GoogleFonts.inter(
+                    fontSize: AppFontsize.textSizeSmall,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors
+                        .primaryText, // Disable styling if applicable                ),
+                  ),
+                ));
+          },
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white, // ✅ Ensure background remains white
+              hintText: 'Search...',
               hintStyle: GoogleFonts.inter(
                 fontSize: AppFontsize.textSizeSmall,
                 fontWeight: FontWeight.w400,
                 color: AppColors.searchfeild,
               ),
-              isDense: true, // ✅ Reduces vertical space
-
-              filled: true,
-              fillColor: Colors.white, // ✅ Ensure background remains white
               contentPadding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -179,15 +125,66 @@ class AppSearchDropdown extends StatelessWidget {
               ),
             ),
           ),
-          dropdownButtonProps: DropdownButtonProps(
-            icon: Icon(
-              Icons.keyboard_arrow_down,
+        ),
+        validator: validator,
+        items: items,
+        selectedItem: selectedItem,
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          baseStyle: GoogleFonts.inter(
+            fontSize: AppFontsize.textSizeSmall,
+            fontWeight: FontWeight.w400,
+            color: AppColors.primaryText,
+          ),
+          dropdownSearchDecoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: GoogleFonts.inter(
+              fontSize: AppFontsize.textSizeSmall,
+              fontWeight: FontWeight.w400,
               color: AppColors.searchfeild,
-              size: 27,
+            ),
+            isDense: true, // ✅ Reduces vertical space
+
+            filled: true,
+            fillColor: Colors.white, // ✅ Ensure background remains white
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide:
+                  BorderSide(color: AppColors.searchfeildcolor, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide:
+                  BorderSide(color: AppColors.searchfeildcolor, width: 1),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: const Color.fromARGB(255, 126, 16, 9),
+                width: 1,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: const Color.fromARGB(255, 126, 16, 9),
+                width: 1,
+              ),
             ),
           ),
-          onChanged: enabled ? onChanged : null,
         ),
+        dropdownButtonProps: DropdownButtonProps(
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: AppColors.searchfeild,
+            size: 27,
+          ),
+        ),
+        onChanged: enabled ? onChanged : null,
       ),
     );
   }

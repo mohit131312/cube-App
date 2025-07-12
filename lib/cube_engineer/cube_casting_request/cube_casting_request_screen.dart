@@ -254,8 +254,8 @@ class CubeCastingRequestScreen extends StatelessWidget {
                         return 'Cubic Meters cannot be empty';
                       }
                       final numValue = int.tryParse(value.trim());
-                      if (numValue == null || numValue < 0 || numValue > 500) {
-                        return 'Enter a value between 0 and 500';
+                      if (numValue == null || numValue < 0 || numValue > 450) {
+                        return 'Enter a value between 0 and 450';
                       }
                       return null;
                     },
@@ -351,7 +351,7 @@ class CubeCastingRequestScreen extends StatelessWidget {
             children: [
               AppBottomButton(
                   leftText: 'Clear',
-                  rightText: 'Send For Approval',
+                  rightText: '  Send For Approval         ',
                   onLeftTap: () async {
                     await cubeCastingRequestController.resetFormData();
                   },

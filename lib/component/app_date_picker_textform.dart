@@ -116,70 +116,66 @@ class AppDatePickerTextform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: TextFormField(
-        controller: controller,
-        onTap: () => _showDatePicker(context),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        style: GoogleFonts.inter(
+    return TextFormField(
+      controller: controller,
+      onTap: () => _showDatePicker(context),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      style: GoogleFonts.inter(
+        fontSize: AppFontsize.textSizeSmall,
+        fontWeight: FontWeight.w400,
+        color: AppColors.primaryText,
+      ),
+      readOnly: readOnly,
+      validator: validator,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hintText,
+        hintStyle: TextStyle(
           fontSize: AppFontsize.textSizeSmall,
           fontWeight: FontWeight.w400,
-          color: AppColors.primaryText,
+          color: AppColors.searchfeild,
         ),
-        readOnly: readOnly,
-        validator: validator,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          hintText: hintText,
-          hintStyle: TextStyle(
-            fontSize: AppFontsize.textSizeSmall,
-            fontWeight: FontWeight.w400,
-            color: AppColors.searchfeild,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1,
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 13, horizontal: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: 1,
-            ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 126, 16, 9),
+            width: 1,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: 1,
-            ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 126, 16, 9),
+            width: 1,
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 126, 16, 9),
-              width: 1,
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 126, 16, 9),
-              width: 1,
-            ),
-          ),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.all(11),
-            child: GestureDetector(
-              onTap: () => _showDatePicker(context),
-              child: Image.asset(
-                'assets/icons/calendar.png',
-                height: 10,
-                width: 10,
-              ),
+        ),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.all(11),
+          child: GestureDetector(
+            onTap: () => _showDatePicker(context),
+            child: Image.asset(
+              'assets/icons/calendar.png',
+              height: 10,
+              width: 10,
             ),
           ),
         ),

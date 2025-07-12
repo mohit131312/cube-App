@@ -55,39 +55,60 @@ class EnterTestResultController extends GetxController {
     initCubeInputs(cubeCount.value); // Initial count
   }
 
+  RxInt minSelectableAge = 0.obs;
+
   void initCubeInputs(int count) {
-    // Clean up previous ones
-    for (var c in lengthControllers) {
-      c.dispose();
-    }
-    for (var c in widthControllers) {
-      c.dispose();
-    }
-    for (var c in heightControllers) {
-      c.dispose();
-    }
-    for (var c in weightControllers) {
-      c.dispose();
-    }
-    for (var c in loadControllers) {
-      c.dispose();
-    }
+    // Dispose only if you are destroying the entire widget/controller, NOT during rebuilds
+    if (lengthControllers.length != count) {
+      // Clear old lists safely (NO DISPOSE!)
+      lengthControllers.clear();
+      lengthFocusNodes.clear();
 
-    // Re-initialize
-    lengthControllers = List.generate(count, (_) => TextEditingController());
-    lengthFocusNodes = List.generate(count, (_) => FocusNode());
+      widthControllers.clear();
+      widthFocusNodes.clear();
 
-    widthControllers = List.generate(count, (_) => TextEditingController());
-    widthFocusNodes = List.generate(count, (_) => FocusNode());
+      heightControllers.clear();
+      heightFocusNodes.clear();
 
-    heightControllers = List.generate(count, (_) => TextEditingController());
-    heightFocusNodes = List.generate(count, (_) => FocusNode());
+      weightControllers.clear();
+      weightFocusNodes.clear();
 
-    weightControllers = List.generate(count, (_) => TextEditingController());
-    weightFocusNodes = List.generate(count, (_) => FocusNode());
+      loadControllers.clear();
+      loadFocusNodes.clear();
 
-    loadControllers = List.generate(count, (_) => TextEditingController());
-    loadFocusNodes = List.generate(count, (_) => FocusNode());
+      // Create new controllers & focus nodes
+      lengthControllers = List.generate(count, (_) => TextEditingController());
+      lengthFocusNodes = List.generate(count, (_) => FocusNode());
+
+      widthControllers = List.generate(count, (_) => TextEditingController());
+      widthFocusNodes = List.generate(count, (_) => FocusNode());
+
+      heightControllers = List.generate(count, (_) => TextEditingController());
+      heightFocusNodes = List.generate(count, (_) => FocusNode());
+
+      weightControllers = List.generate(count, (_) => TextEditingController());
+      weightFocusNodes = List.generate(count, (_) => FocusNode());
+
+      loadControllers = List.generate(count, (_) => TextEditingController());
+      loadFocusNodes = List.generate(count, (_) => FocusNode());
+    } else {
+      // Just clear values if count matches
+      for (var controller in lengthControllers) {
+        controller.clear();
+      }
+      for (var controller in widthControllers) {
+        controller.clear();
+      }
+      for (var controller in heightControllers) {
+        controller.clear();
+      }
+      for (var controller in weightControllers) {
+        controller.clear();
+      }
+      for (var controller in loadControllers) {
+        controller.clear();
+      }
+    }
   }
 
   RxList<BatchNoMain> batchNoList = <BatchNoMain>[].obs;
@@ -111,12 +132,35 @@ class EnterTestResultController extends GetxController {
       var project = batchNoFromJson(response.body);
       msg.value = project.message ?? '';
 
+      // if (project.data != null) {
+      //   batchNoList.assignAll(project.data!.testingDateList!);
+      //   cubeCastingId.value = project.data!.cubeCastingId!;
+      //   print("batchNoList Count: ${batchNoList.length}");
+      // } else {
+      //   batchNoList.clear();
+      //   print("No project data found.");
+      // }
       if (project.data != null) {
         batchNoList.assignAll(project.data!.testingDateList!);
         cubeCastingId.value = project.data!.cubeCastingId!;
         print("batchNoList Count: ${batchNoList.length}");
+
+        // ✅ Compute minimum selectable age
+        final validAges = batchNoList
+            .where((e) => e.age != null && e.age! > 0)
+            .map((e) => e.age!)
+            .toList();
+
+        if (validAges.isNotEmpty) {
+          minSelectableAge.value = validAges.reduce((a, b) => a < b ? a : b);
+          print("✅ Min Selectable Age: ${minSelectableAge.value}");
+        } else {
+          minSelectableAge.value = 0;
+          print("⚠️ No valid ages found. Defaulting to 0.");
+        }
       } else {
         batchNoList.clear();
+        minSelectableAge.value = 0; // Reset if data not found
         print("No project data found.");
       }
       print('batchNoList Count: ${batchNoList.length}');
@@ -125,6 +169,19 @@ class EnterTestResultController extends GetxController {
       print("Error: $e");
       return true;
     }
+  }
+
+  void showAgeSelectionError() {
+    showDialog(
+      context: Get.context!,
+      builder: (_) => CustomValidationPopup(
+        message:
+            "Only the schedule date with minimum age (${minSelectableAge.value} days) is allowed.",
+        icon: Icons.error_outline,
+        iconColor: Colors.redAccent,
+        onOk: () {},
+      ),
+    );
   }
 
   var validatemsg = "".obs;

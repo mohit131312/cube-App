@@ -42,64 +42,59 @@ class AppTextFormfeild extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: !enabled,
-      child: SizedBox(
-        height: 46,
-        child: TextFormField(
-          controller: controller,
-          textInputAction: textInputAction,
-          keyboardType: keyboardType,
-          validator: validator,
-          readOnly: readOnly,
-          onChanged: onChanged,
-          focusNode: focusNode,
-          onFieldSubmitted: onFieldSubmitted,
-          style: GoogleFonts.inter(
+      child: TextFormField(
+        controller: controller,
+        textInputAction: textInputAction,
+        keyboardType: keyboardType,
+        validator: validator,
+        readOnly: readOnly,
+        onChanged: onChanged,
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmitted,
+        style: GoogleFonts.inter(
+          fontSize: AppFontsize.textSizeSmall,
+          fontWeight: FontWeight.w400,
+          color: AppColors.primaryText,
+        ),
+        inputFormatters: inputFormatters,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: GoogleFonts.inter(
             fontSize: AppFontsize.textSizeSmall,
             fontWeight: FontWeight.w400,
-            color: AppColors.primaryText,
+            color: AppColors.searchfeild,
           ),
-          inputFormatters: inputFormatters,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: GoogleFonts.inter(
-              fontSize: AppFontsize.textSizeSmall,
-              fontWeight: FontWeight.w400,
-              color: AppColors.searchfeild,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  BorderSide(color: AppColors.searchfeildcolor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  BorderSide(color: AppColors.searchfeildcolor, width: 1),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: const Color.fromARGB(255, 126, 16, 9),
-                width: 1,
-              ),
-            ),
-            filled: true,
-            fillColor: fillColor, // 👈 Use the parameter here
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: const Color.fromARGB(255, 126, 16, 9),
-                width: 1,
-              ),
-            ),
-            suffixIcon: suffixIcon,
-            prefixIcon: prefixIcon,
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: AppColors.searchfeildcolor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: AppColors.searchfeildcolor, width: 1),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: const Color.fromARGB(255, 126, 16, 9),
+              width: 1,
+            ),
+          ),
+          filled: true,
+          fillColor: fillColor, // 👈 Use the parameter here
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: const Color.fromARGB(255, 126, 16, 9),
+              width: 1,
+            ),
+          ),
+          suffixIcon: suffixIcon,
+          prefixIcon: prefixIcon,
         ),
       ),
     );

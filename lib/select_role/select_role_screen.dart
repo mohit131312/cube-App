@@ -29,6 +29,75 @@ class SelectRoleScreen extends StatelessWidget {
       Get.put(SelectProjectControllerView());
   final SelectProjectOptController selectProjectOptController =
       Get.put(SelectProjectOptController());
+  Future<bool> showConfirmationDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: Colors.white,
+          title: AppText(
+            text: 'Are You Sure?',
+            fontSize: AppFontsize.textSizeMediumm,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+          content: AppText(
+              text: 'Are you sure you want to Logout',
+              fontSize: AppFontsize.textSizeSmall,
+              fontWeight: FontWeight.w500,
+              color: AppColors.searchfeild),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: AppText(
+                        text: 'Cancel',
+                        fontSize: AppFontsize.textSizeSmallm,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: AppColors.buttoncolor,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: AppText(
+                        text: 'Yes',
+                        fontSize: AppFontsize.textSizeSmallm,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+      },
+    );
+    return result ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +130,12 @@ class SelectRoleScreen extends StatelessWidget {
               padding: EdgeInsets.only(right: 10),
               child: GestureDetector(
                   onTap: () async {
-                    await RemoteServices.logout();
+                    bool res = await showConfirmationDialog(context);
+                    if (res) {
+                      await RemoteServices.logout();
 
-                    Get.offAll(() => LoginScreen());
+                      Get.offAll(() => LoginScreen());
+                    }
                   },
                   child: Icon(
                     Icons.logout,

@@ -241,15 +241,55 @@ class EnterTestResultScreen extends StatelessWidget {
                               ? enterTestResultController.scheduleDate.value
                               : null,
                           hintText: 'Select  Date',
+                          // onChanged: (value) {
+                          //   enterTestResultController.scheduleDate.value =
+                          //       value!;
+                          //   final selectedBatch = enterTestResultController
+                          //       .batchNoList
+                          //       .firstWhereOrNull(
+                          //           (batch) => batch.testingDate == value);
+
+                          //   if (selectedBatch != null) {
+                          //     final cubeCount = selectedBatch.cubeCount ?? 0;
+                          //     enterTestResultController.cubeCount.value =
+                          //         cubeCount;
+                          //     enterTestResultController.cubeReuestingId.value =
+                          //         selectedBatch.id ?? 0;
+                          //     enterTestResultController
+                          //         .initCubeInputs(cubeCount);
+                          //   }
+                          //   print("📅 Selected schedule date: $value");
+                          // },
                           onChanged: (value) {
-                            enterTestResultController.scheduleDate.value =
-                                value!;
                             final selectedBatch = enterTestResultController
                                 .batchNoList
                                 .firstWhereOrNull(
                                     (batch) => batch.testingDate == value);
 
                             if (selectedBatch != null) {
+                              final selectedAge = selectedBatch.age;
+                              print("📅   selectedAge: $selectedAge");
+                              if (selectedAge !=enterTestResultController. minSelectableAge.value) {
+                                print("Rejected: selectedAge = $selectedAge, required = ${enterTestResultController.minSelectableAge.value}");
+                                  print("📅 in if  selectedAge: $selectedAge");
+
+                                  enterTestResultController.scheduleDate.value = '';
+                                  enterTestResultController.showAgeSelectionError();
+                                return;
+                              }
+
+
+                              // if (selectedAge == null ||
+                              //     selectedAge != enterTestResultController.minSelectableAge.value) {
+                              //   print("📅 in if  selectedAge: $selectedAge");
+                              //
+                              //   enterTestResultController.scheduleDate.value = '';
+                              //   enterTestResultController.showAgeSelectionError();
+                              //   return;
+                              // }
+
+                              enterTestResultController.scheduleDate.value =
+                                  value!;
                               final cubeCount = selectedBatch.cubeCount ?? 0;
                               enterTestResultController.cubeCount.value =
                                   cubeCount;
@@ -257,8 +297,8 @@ class EnterTestResultScreen extends StatelessWidget {
                                   selectedBatch.id ?? 0;
                               enterTestResultController
                                   .initCubeInputs(cubeCount);
+                              print("📅 Selected schedule date: $value");
                             }
-                            print("📅 Selected schedule date: $value");
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {

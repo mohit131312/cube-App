@@ -118,61 +118,58 @@ class AppDatepicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: TextFormField(
-        controller: controller,
-        onTap: () => _showDatePicker(context),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        style: GoogleFonts.inter(
+    return TextFormField(
+      controller: controller,
+      onTap: () => _showDatePicker(context),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      style: GoogleFonts.inter(
+        fontSize: AppFontsize.textSizeSmall,
+        fontWeight: FontWeight.w400,
+        color: AppColors.primaryText,
+      ),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
           fontSize: AppFontsize.textSizeSmall,
           fontWeight: FontWeight.w400,
-          color: AppColors.primaryText,
+          color: AppColors.searchfeild,
         ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            fontSize: AppFontsize.textSizeSmall,
-            fontWeight: FontWeight.w400,
-            color: AppColors.searchfeild,
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1,
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: 1,
-            ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: 1,
-            ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: 1,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: 1,
-            ),
-          ),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.all(11),
-            child: GestureDetector(
-              onTap: () => _showDatePicker(context),
-              child: Image.asset(
-                'assets/icons/calendar.png',
-                height: 10,
-                width: 10,
-              ),
+        ),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.all(11),
+          child: GestureDetector(
+            onTap: () => _showDatePicker(context),
+            child: Image.asset(
+              'assets/icons/calendar.png',
+              height: 10,
+              width: 10,
             ),
           ),
         ),
-        readOnly: readOnly,
-        validator: validator,
       ),
+      readOnly: readOnly,
+      validator: validator,
     );
   }
 }

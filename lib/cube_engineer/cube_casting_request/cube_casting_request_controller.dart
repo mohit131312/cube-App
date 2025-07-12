@@ -32,8 +32,6 @@ class CubeCastingRequestController extends GetxController {
         'Concrete Grade: ${selectConcertOfGrade.value} (ID: ${selectConcertOfGradeId.value})');
   }
 
-  var selectProposeDate = ''.obs;
-
   final TextEditingController dateController = TextEditingController();
 
   void updateDate(DateTime newDate) {
@@ -165,7 +163,6 @@ class CubeCastingRequestController extends GetxController {
       {"min": 301, "max": 350, "samples": 12 * 3},
       {"min": 351, "max": 400, "samples": 13 * 3},
       {"min": 401, "max": 450, "samples": 14 * 3},
-      {"min": 451, "max": 500, "samples": 15 * 3},
     ];
 
     for (var range in ranges) {
@@ -256,7 +253,6 @@ class CubeCastingRequestController extends GetxController {
     selectConcertOfGrade.value = '';
     selectConcertOfGradeId.value = null;
 
-    selectProposeDate.value = '';
     dateController.clear();
 
     cubicMeterController.clear();

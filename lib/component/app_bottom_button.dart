@@ -26,7 +26,7 @@ class AppBottomButton extends StatelessWidget {
         GestureDetector(
           onTap: onLeftTap,
           child: Container(
-            width: SizeConfig.widthMultiplier * 34,
+            width: SizeConfig.widthMultiplier * 26,
             height: SizeConfig.heightMultiplier * 5.5,
             decoration: BoxDecoration(
               color: AppColors.primary,
@@ -46,7 +46,7 @@ class AppBottomButton extends StatelessWidget {
         GestureDetector(
           onTap: onRightTap,
           child: Container(
-            width: SizeConfig.widthMultiplier * 48,
+            width: SizeConfig.widthMultiplier * 56,
             height: SizeConfig.heightMultiplier * 5.5,
             decoration: BoxDecoration(
               color: AppColors.buttoncolor,
@@ -58,6 +58,7 @@ class AppBottomButton extends StatelessWidget {
                 fontSize: AppFontsize.textSizeSmallm,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
