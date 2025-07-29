@@ -50,6 +50,7 @@ class CardResult {
   DateTime? proposedDateCasting;
   String? labAddress;
   int? age;
+  DateTime? scheduleDate;
 
   CardResult({
     this.id,
@@ -59,13 +60,14 @@ class CardResult {
     this.proposedDateCasting,
     this.labAddress,
     this.age,
+    this.scheduleDate,
   });
 
   factory CardResult.fromJson(Map<String, dynamic> json) => CardResult(
         id: json["id"],
-        testingDate: json["testing_date"] == null
+        testingDate: json["testing_date_tr"] == null
             ? null
-            : DateTime.parse(json["testing_date"]),
+            : DateTime.parse(json["testing_date_tr"]),
         status: json["status"],
         batchNo: json["batch_no"],
         proposedDateCasting: json["proposed_date_casting"] == null
@@ -73,6 +75,9 @@ class CardResult {
             : DateTime.parse(json["proposed_date_casting"]),
         labAddress: json["lab_address"],
         age: json["age"],
+        scheduleDate: json["schedule_date_tr"] == null
+            ? null
+            : DateTime.parse(json["schedule_date_tr"]),
       );
 
   Map<String, dynamic> toJson() => {

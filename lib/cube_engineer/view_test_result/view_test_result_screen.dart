@@ -7,9 +7,9 @@ import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
 import 'package:cube_app/utils/check_internet.dart';
-import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/custome_popup.dart';
 import 'package:cube_app/utils/date_format.dart';
+import 'package:cube_app/utils/loader_screen.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,7 +116,10 @@ class ViewTestResultScreen extends StatelessWidget {
                           onDateSelected: (date) async {
                             if (await CheckInternet.checkInternet()) {
                               await viewTestResultController.updateDate(date);
-                              showLoaderDialog();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CustomLoadingPopup());
                               await viewTestResultController.getviewTestResult(
                                   viewTestResultController.dateController.text,
                                   buildingId);
@@ -179,7 +182,10 @@ class ViewTestResultScreen extends StatelessWidget {
                         return GestureDetector(
                           onTap: () async {
                             if (await CheckInternet.checkInternet()) {
-                              showLoaderDialog();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CustomLoadingPopup());
                               bool success = await cardDetailsController
                                   .getviewTestDetailsResult(
                                       viewTestResultController

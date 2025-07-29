@@ -12,11 +12,15 @@ import 'package:get/get.dart';
 class DashboardLabOperatorScreen extends StatelessWidget {
   final int projectId;
   final String projectName;
+  final int buildingId;
+  final String buildingName;
 
   DashboardLabOperatorScreen({
     super.key,
     required this.projectId,
     required this.projectName,
+    required this.buildingId,
+    required this.buildingName,
   });
   final DashboardLabOperatorController dashboardLabOperatorController =
       Get.put(DashboardLabOperatorController());
@@ -96,7 +100,12 @@ class DashboardLabOperatorScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       // if (index == 0) {
-                      Get.to(() => EnterTestResultScreen());
+                      Get.to(() => EnterTestResultScreen(
+                            projectId: projectId,
+                            projectName: projectName,
+                            buildingId: buildingId,
+                            buildingName: buildingName,
+                          ));
                       // } else {
                       //   Get.to(() => ViewTestResultScreen());
                       // }

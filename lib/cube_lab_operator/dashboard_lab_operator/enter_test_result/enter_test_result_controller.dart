@@ -114,10 +114,14 @@ class EnterTestResultController extends GetxController {
   RxList<BatchNoMain> batchNoList = <BatchNoMain>[].obs;
   RxString scheduleDate = RxString("");
   var msg = "".obs;
-  Future getBacthData(batchNo) async {
+  Future getBacthData(batchNo, buildingId, projectId) async {
     try {
       msg.value = '';
-      Map<String, dynamic> map = {"batch_number": batchNo};
+      Map<String, dynamic> map = {
+        "batch_number": batchNo,
+        "building_id": buildingId,
+        "project_id": projectId,
+      };
       log("map ----$map");
 
       var response =

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cube_app/component/app_bottom_button.dart';
 import 'package:cube_app/component/app_date_picker_textform.dart';
 import 'package:cube_app/component/app_notes_textformfeild.dart';
-import 'package:cube_app/component/app_search_dropdown.dart';
+import 'package:cube_app/component/app_search_dropdown_disable.dart';
 import 'package:cube_app/component/app_text.dart';
 import 'package:cube_app/component/app_textformfeild.dart';
 import 'package:cube_app/component/cube_test_result_input.dart';
@@ -13,15 +13,26 @@ import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
 import 'package:cube_app/utils/check_internet.dart';
-import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/custome_popup.dart';
+import 'package:cube_app/utils/loader_screen.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class EnterTestResultScreen extends StatelessWidget {
-  EnterTestResultScreen({super.key});
+  final int projectId;
+  final String projectName;
+  final int buildingId;
+  final String buildingName;
+
+  EnterTestResultScreen({
+    super.key,
+    required this.projectId,
+    required this.projectName,
+    required this.buildingId,
+    required this.buildingName,
+  });
   EnterTestResultController enterTestResultController =
       Get.put(EnterTestResultController());
   Future<bool> showConfirmationDialog(BuildContext context) async {
@@ -41,7 +52,7 @@ class EnterTestResultScreen extends StatelessWidget {
             color: Colors.black,
           ),
           content: AppText(
-              text: 'Are you sure you want to Submit Test Result',
+              text: 'Are you sure you want to send result for approval',
               fontSize: AppFontsize.textSizeSmall,
               fontWeight: FontWeight.w500,
               color: AppColors.searchfeild),
@@ -176,15 +187,18 @@ class EnterTestResultScreen extends StatelessWidget {
                         textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'No Of Cube cannot be empty';
+                            return 'Batch Number cannot be empty';
                           }
                           return null;
                         },
                         onChanged: (value) async {
                           if (await CheckInternet.checkInternet()) {
                             await enterTestResultController.getBacthData(
-                                enterTestResultController.batchnoController.text
-                                    .trim());
+                              enterTestResultController.batchnoController.text
+                                  .trim(),
+                              buildingId,
+                              projectId,
+                            );
                           } else {
                             await showDialog(
                               context: Get.context!,
@@ -230,86 +244,58 @@ class EnterTestResultScreen extends StatelessWidget {
                         color: AppColors.primary,
                       ),
                       SizedBox(height: SizeConfig.heightMultiplier * 0.5),
-                      Obx(
-                        () => AppSearchDropdown(
+                      Obx(() {
+                        final allDates = enterTestResultController.batchNoList
+                            .map((e) => e.testingDate ?? '')
+                            .toList();
+
+                        final disabledDates = enterTestResultController
+                            .batchNoList
+                            .where((e) =>
+                                e.age !=
+                                enterTestResultController
+                                    .minSelectableAge.value)
+                            .map((e) => e.testingDate ?? '')
+                            .toSet();
+
+                        return AppSearchDropdownDisable(
                           key: enterTestResultController.scheduledateFormKey,
-                          items: enterTestResultController.batchNoList
-                              .map((batch) => batch.testingDate ?? '')
-                              .toList(),
+                          items: allDates,
                           selectedItem: enterTestResultController
                                   .scheduleDate.value.isNotEmpty
                               ? enterTestResultController.scheduleDate.value
                               : null,
-                          hintText: 'Select  Date',
-                          // onChanged: (value) {
-                          //   enterTestResultController.scheduleDate.value =
-                          //       value!;
-                          //   final selectedBatch = enterTestResultController
-                          //       .batchNoList
-                          //       .firstWhereOrNull(
-                          //           (batch) => batch.testingDate == value);
-
-                          //   if (selectedBatch != null) {
-                          //     final cubeCount = selectedBatch.cubeCount ?? 0;
-                          //     enterTestResultController.cubeCount.value =
-                          //         cubeCount;
-                          //     enterTestResultController.cubeReuestingId.value =
-                          //         selectedBatch.id ?? 0;
-                          //     enterTestResultController
-                          //         .initCubeInputs(cubeCount);
-                          //   }
-                          //   print("📅 Selected schedule date: $value");
-                          // },
+                          disabledItems: disabledDates,
+                          hintText: 'Select Date',
                           onChanged: (value) {
+                            if (value == null) return;
+
+                            // Proceed with updating for non-disabled dates
                             final selectedBatch = enterTestResultController
                                 .batchNoList
                                 .firstWhereOrNull(
                                     (batch) => batch.testingDate == value);
 
-                            if (selectedBatch != null) {
-                              final selectedAge = selectedBatch.age;
-                              print("📅   selectedAge: $selectedAge");
-                              if (selectedAge !=enterTestResultController. minSelectableAge.value) {
-                                print("Rejected: selectedAge = $selectedAge, required = ${enterTestResultController.minSelectableAge.value}");
-                                  print("📅 in if  selectedAge: $selectedAge");
+                            if (selectedBatch == null) return;
 
-                                  enterTestResultController.scheduleDate.value = '';
-                                  enterTestResultController.showAgeSelectionError();
-                                return;
-                              }
-
-
-                              // if (selectedAge == null ||
-                              //     selectedAge != enterTestResultController.minSelectableAge.value) {
-                              //   print("📅 in if  selectedAge: $selectedAge");
-                              //
-                              //   enterTestResultController.scheduleDate.value = '';
-                              //   enterTestResultController.showAgeSelectionError();
-                              //   return;
-                              // }
-
-                              enterTestResultController.scheduleDate.value =
-                                  value!;
-                              final cubeCount = selectedBatch.cubeCount ?? 0;
-                              enterTestResultController.cubeCount.value =
-                                  cubeCount;
-                              enterTestResultController.cubeReuestingId.value =
-                                  selectedBatch.id ?? 0;
-                              enterTestResultController
-                                  .initCubeInputs(cubeCount);
-                              print("📅 Selected schedule date: $value");
-                            }
+                            enterTestResultController.scheduleDate.value =
+                                value;
+                            enterTestResultController.cubeCount.value =
+                                selectedBatch.cubeCount ?? 0;
+                            enterTestResultController.cubeReuestingId.value =
+                                selectedBatch.id ?? 0;
+                            enterTestResultController
+                                .initCubeInputs(selectedBatch.cubeCount ?? 0);
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
-                            if (value == null ||
-                                value.toString().trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return 'Please select a Date';
                             }
                             return null;
                           },
-                        ),
-                      ),
+                        );
+                      }),
                       SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
                         text: AppConstText.dateoftesting,
@@ -333,7 +319,7 @@ class EnterTestResultScreen extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.heightMultiplier * 1.5),
                       AppText(
-                        text: AppConstText.notes,
+                        text: 'Remark',
                         fontSize: AppFontsize.textSizeSmall,
                         fontWeight: FontWeight.w400,
                         color: AppColors.primary,
@@ -350,7 +336,7 @@ class EnterTestResultScreen extends StatelessWidget {
                         textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Notes cannot be empty';
+                            return 'Remark cannot be empty';
                           }
                           return null;
                         },
@@ -424,7 +410,7 @@ class EnterTestResultScreen extends StatelessWidget {
                       SizedBox(height: SizeConfig.heightMultiplier * 5),
                       AppBottomButton(
                           leftText: 'Clear',
-                          rightText: 'Send For Approval',
+                          rightText: 'Send Result For Approval',
                           onLeftTap: () {
                             enterTestResultController.clearFormData();
                           },
@@ -443,7 +429,10 @@ class EnterTestResultScreen extends StatelessWidget {
                                 if (enterTestResultController
                                     .formKey.currentState!
                                     .validate()) {
-                                  showLoaderDialog();
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          CustomLoadingPopup());
                                   bool success = await enterTestResultController
                                       .saveTestResult(context);
                                   Get.back();

@@ -93,6 +93,7 @@ class ScheduleActReportScreen extends StatelessWidget {
                           ),
                         ),
                         child: AppDatepickerBorder(
+                          flag: false,
                           controller:
                               scheduleActReportController.dateController,
                           onDateSelected: (date) async {
@@ -103,6 +104,7 @@ class ScheduleActReportScreen extends StatelessWidget {
                                   .getcastingCubesAllByDate(
                                 scheduleActReportController.dateController.text,
                                 projectId,
+                                buildingId
                               );
                             } else {
                               await showDialog(
@@ -314,8 +316,7 @@ class ScheduleActReportScreen extends StatelessWidget {
                                                                 .projectLocation),
                                                         labelValue(
                                                             "Level",
-                                                            cubessites
-                                                                .levelOfConcreting
+                                                            cubessites.floorName
                                                                 .toString()),
                                                         labelValue(
                                                             "Date Of Casting",
@@ -323,6 +324,10 @@ class ScheduleActReportScreen extends StatelessWidget {
                                                                 .proposedDateCasting)),
                                                         labelValue("Batch No",
                                                             cubessites.batchNo),
+                                                        labelValue(
+                                                          "Grade",
+                                                          cubessites.gradeName,
+                                                        ),
                                                       ],
                                                     ),
                                                   )
@@ -592,7 +597,7 @@ class ScheduleActReportScreen extends StatelessWidget {
                                                         labelValue(
                                                             "Level",
                                                             cubefromsites
-                                                                .levelOfConcreting
+                                                                .floorName
                                                                 .toString()),
                                                         labelValue(
                                                             "Date Of Casting",
@@ -602,6 +607,11 @@ class ScheduleActReportScreen extends StatelessWidget {
                                                             "Batch No",
                                                             cubefromsites
                                                                 .batchNo),
+                                                        labelValue(
+                                                          "Grade",
+                                                          cubefromsites
+                                                              .gradeName,
+                                                        ),
                                                       ],
                                                     ),
                                                   )
@@ -829,8 +839,7 @@ class ScheduleActReportScreen extends StatelessWidget {
                                                             testsched.batchNo),
                                                         labelValue(
                                                             "No Of Cube",
-                                                            testsched
-                                                                .requiredCubes
+                                                            testsched.cubeCount
                                                                 .toString()),
                                                         labelValue(
                                                           "Date Of Testing",

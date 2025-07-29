@@ -99,6 +99,8 @@ class SelectProjectOptScreen extends StatelessWidget {
                         onTap: () {
                           final projectId = selectedProject.projectId;
                           final projectName = selectedProject.projectName;
+                          final buildingId = selectedProject.buildingId;
+                          final buildingName = selectedProject.buildingName;
 
                           print('Selected Project ID: $projectId');
                           print('Selected Project Name: $projectName');
@@ -106,6 +108,8 @@ class SelectProjectOptScreen extends StatelessWidget {
                           Get.to(() => DashboardLabOperatorScreen(
                                 projectId: projectId!,
                                 projectName: projectName!,
+                                buildingId: buildingId!,
+                                buildingName: buildingName!,
                               ));
                         },
                         child: Container(

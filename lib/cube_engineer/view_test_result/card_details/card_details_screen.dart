@@ -226,7 +226,7 @@ class CardDetailsScreen extends StatelessWidget {
                               SizedBox(
                                   height: SizeConfig.heightMultiplier * 0.3),
                               AppText(
-                                text: formatDate(cardResult.testingDate),
+                                text: formatDate(cardResult.scheduleDate),
                                 fontSize: AppFontsize.textSizeSmalle,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.primaryText,

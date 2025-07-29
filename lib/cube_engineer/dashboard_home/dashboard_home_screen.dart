@@ -8,8 +8,8 @@ import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
 import 'package:cube_app/utils/check_internet.dart';
-import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/custome_popup.dart';
+import 'package:cube_app/utils/loader_screen.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -107,7 +107,10 @@ class DashboardHomeScreen extends StatelessWidget {
                     onTap: () async {
                       if (index == 0) {
                         if (await CheckInternet.checkInternet()) {
-                          showLoaderDialog();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CustomLoadingPopup());
                           await cubeCastingRequestController.resetAllData();
                           bool success = await cubeCastingRequestController
                               .getconcertingLevel(projectId, buildingId);
@@ -140,7 +143,10 @@ class DashboardHomeScreen extends StatelessWidget {
                       } else {
                         if (await CheckInternet.checkInternet()) {
                           viewTestResultController.resetData();
-                          showLoaderDialog();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CustomLoadingPopup());
                           bool success = await viewTestResultController
                               .getviewTestResult('', buildingId);
                           Get.back();

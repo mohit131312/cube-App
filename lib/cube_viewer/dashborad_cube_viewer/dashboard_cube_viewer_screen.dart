@@ -7,8 +7,8 @@ import 'package:cube_app/utils/app_color.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
 import 'package:cube_app/utils/check_internet.dart';
-import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/custome_popup.dart';
+import 'package:cube_app/utils/loader_screen.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -108,9 +108,13 @@ class DashboardCubeViewerScreen extends StatelessWidget {
                       // } else {if
 
                       if (await CheckInternet.checkInternet()) {
-                        showLoaderDialog();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CustomLoadingPopup());
                         await scheduleActReportController
-                            .getcastingCubesAll(projectId);
+                            .getcastingCubesAll(projectId,buildingId);
+                            scheduleActReportController.dateController.clear();
                         Get.back();
                         Get.to(() => ScheduleActReportScreen(
                               projectId: projectId,

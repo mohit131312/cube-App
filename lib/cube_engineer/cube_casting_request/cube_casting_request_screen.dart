@@ -10,8 +10,8 @@ import 'package:cube_app/utils/app_confimationdialog.dart';
 import 'package:cube_app/utils/app_const_text.dart';
 import 'package:cube_app/utils/app_fontsize.dart';
 import 'package:cube_app/utils/check_internet.dart';
-import 'package:cube_app/utils/custom_loader.dart';
 import 'package:cube_app/utils/custome_popup.dart';
+import 'package:cube_app/utils/loader_screen.dart';
 import 'package:cube_app/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -221,6 +221,7 @@ class CubeCastingRequestScreen extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.heightMultiplier * 1),
                   AppDatepickerBorder(
+                    flag: true,
                     controller: cubeCastingRequestController.dateController,
                     onDateSelected: (date) =>
                         cubeCastingRequestController.updateDate(date),
@@ -367,7 +368,10 @@ class CubeCastingRequestScreen extends StatelessWidget {
                             onConfirm: () async {
                               Navigator.of(dialogContext).pop();
 
-                              showLoaderDialog();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      CustomLoadingPopup());
 
                               var success = await cubeCastingRequestController
                                   .postForApproval(

@@ -37,9 +37,9 @@ class ScheduleActReportController extends GetxController {
   RxList<TodaysTestingSchedule> cubeTestingSchedule =
       <TodaysTestingSchedule>[].obs;
 
-  Future<bool> getcastingCubesAll(projectId) async {
+  Future<bool> getcastingCubesAll(projectId,buildingId) async {
     try {
-      Map<String, dynamic> map = {"project_id": projectId};
+      Map<String, dynamic> map = {"project_id": projectId,"building_id":buildingId};
 
       var response = await RemoteServices.postMethodWithToken(
         'get_cube_report_viewer_data',
@@ -81,7 +81,7 @@ class ScheduleActReportController extends GetxController {
     }
   }
 
-  Future<bool> getcastingCubesAllByDate(date, projectId) async {
+  Future<bool> getcastingCubesAllByDate(date, projectId,buildingId) async {
     try {
       castingCubesSitesList.clear();
       cubesFromSites.clear();
@@ -90,6 +90,7 @@ class ScheduleActReportController extends GetxController {
       Map<String, dynamic> map = {
         "project_id": projectId,
         "report_date": date,
+        "building_id":buildingId
       };
 
       var response = await RemoteServices.postMethodWithToken(

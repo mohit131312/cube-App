@@ -12,6 +12,7 @@ class AppDatepickerBorder extends StatelessWidget {
   final String? Function(String?)? validator;
   final String hintText;
   final bool readOnly;
+  final bool flag;
 
   const AppDatepickerBorder({
     super.key,
@@ -20,6 +21,7 @@ class AppDatepickerBorder extends StatelessWidget {
     this.validator,
     this.hintText = "Select Date",
     this.readOnly = true,
+    this.flag = false,
   });
 
   void _showDatePicker(BuildContext context) {
@@ -70,7 +72,7 @@ class AppDatepickerBorder extends StatelessWidget {
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.date,
                         initialDateTime: today,
-                        minimumDate: today,
+                        minimumDate: flag ? today : null,
                         onDateTimeChanged: (DateTime newDate) {
                           selectedDate = newDate;
                         },
